@@ -36,7 +36,7 @@ body.before-load {
 }
 .local-nav {
   position: absolute;
-  top: 45px;
+  top: 45px; /* global-nav의 높이가 44px이기 때문에 높이를 맞춰줌 */
   left: 0;
   z-index: 11;
   width: 100%;
@@ -77,6 +77,8 @@ body.before-load {
   margin-left: 2em;
 }
 .scroll-section {
+  position: relative;
+  border: 3px solid red;
   padding-top: 50vh;
 }
 #scroll-section-0 h1 {
@@ -87,8 +89,10 @@ body.before-load {
   display: flex;
   align-items: center;
   justify-content: center;
+  top: 35vh;
   height: 3em;
   font-size: 2.5rem;
+  opacity: 0;
 }
 .main-message p {
   font-weight: bold;
@@ -125,6 +129,14 @@ body.before-load {
   height: 100px;
   background-color: rgb(29, 29, 31);
 }
+#scroll-section-2 .b {
+  top: 10%;
+  left: 40%;
+}
+#scroll-section-2 .c {
+  top: 15%;
+  left: 45%;
+}
 .mid-message {
     max-width: 1000px;
     margin: 0 auto;
@@ -154,7 +166,6 @@ body.before-load {
 .sticky-elem {
     display: none;
     position: fixed;
-    top: 0;
     left: 0;
     width: 100%;
 }
@@ -188,9 +199,17 @@ body.before-load {
     .desc-message {
         width: 20%;
     }
+    #scroll-section-2 .b {
+      top: 20%;
+      left: 53%;
+    }
+    #scroll-section-2 .c {
+      left: 55%;
+    }
     .mid-message {
         font-size: 4vw;
     }
     .canvas-caption {
         font-size: 2rem;
     }
+  }
