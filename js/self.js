@@ -16,9 +16,15 @@
             messageA: document.querySelector("#scroll-section-0 .main-message.a"),
             messageB: document.querySelector("#scroll-section-0 .main-message.b"),
             messageC: document.querySelector("#scroll-section-0 .main-message.c"),
-            messageD: document.querySelector("#scroll-section-0 .main-messagqe.d"),
+            messageD: document.querySelector("#scroll-section-0 .main-message.d"),
+            canvas: document.querySelector('#video-canvas-0'),
+            context: document.querySelector("#video-canvas-0").getContext('2d'),
+            videoImages: [] 
       },
       values: {
+            videoImageCount: 300,
+            imageSequence: [0, 299],
+            canvas_opacity: [1, 0, {start: 0.9, end: 1}],
             messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
             messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
             messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -37,15 +43,15 @@
             messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }]
       },
     },
-    // {
-    //   // scroll-section 1
-    //   type: "normal",
-    //   heightNum: 5,
-    //   scrollHeight: 0,
-    //   objs: {
-    //     container: document.querySelector("#scroll-section-1"),
-    //   },
-    // },
+    {
+      // scroll-section 1
+      type: "normal",
+      heightNum: 5,
+      scrollHeight: 0,
+      objs: {
+        container: document.querySelector("#scroll-section-1"),
+      },
+    },
     // {
     //   // scroll-section 2
     //   type: "sticky",
@@ -66,15 +72,23 @@
     // },
   ];
 
+  function setCanvasImages() {
+      for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+          imgElem = new Image();
+          imgElem.src = `../video/001/IMG_${6726 + i}.JPG`;
+          sceneInfo[0].objs.videoImages.push(imgElem); // 첫번째 씬에서 사용하는 이미지 이기 때문에 [0]
+      }
+  }
+  setCanvasImages();
+
   // 각 스크롤섹션의 높이 셋팅
   function setLayout() {
     for (let i = 0; i < sceneInfo.length; i++) {
       if ( sceneInfo[i].type === 'sticky') {
-        sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
-      }
-      // } else if ( sceneInfo[i].type === 'normal' ) {
-      //     sceneInfo[i].scrollHeight = sceneInfo[i].objs.container.offsetHeight;
-      // }
+          sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
+      } else if ( sceneInfo[i].type === 'normal' ) {
+          sceneInfo[i].scrollHeight = sceneInfo[i].objs.container.offsetHeight;
+        }
       sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
     }
 
@@ -89,6 +103,9 @@
       }
     }
     document.body.setAttribute("id", `show-scene-${currentScene}`);
+
+    const heightRatio = window.innerHeight /1080; // canvas크기와 window의 크기에 대한 비율로 맞춰주면 됨
+    sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%,-50%, 0) scale(${heightRatio})`; // scale에 변화를 주었기 때문에 top:0으로 맞춰줘도 딱 맞게 붙지 않음
   }
 
   // 현재 섹션에서 스크롤이 얼마나 움직였는지의 비율(0~1)을 계산해서 css에 적용하기 위한 함수
@@ -128,6 +145,9 @@
     switch (currentScene) {
       
       case 0:
+        let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+        objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYOffset);
         // messageA가 0에서 등장하기 때문에 'in'으로 구분하기(나가는건 out)
         // opacity의 start와 end시점의 중간지점의 비율을 잡아서 그 지점보다 작을땐 in에 해당되는 효과를, 클땐 out에 해당되는 효과를 나타나게 함
         if ( scrollRatio <= 0.22 ) {
@@ -169,7 +189,7 @@
             objs.messageD.style.opacity = calcValues(values.messageD_opacity_out, currentYOffset);
             objs.messageD.style.transform = `translate3d(0, ${calcValues(values.messageD_translateY_out, currentYOffset)}%, 0)`;
         }
-        
+
         break;
 
       case 1:
@@ -213,6 +233,9 @@
     yOffset = window.pageYOffset;
     scrollLoop();
   });
-  window.addEventListener("load", setLayout); // 이미지와 텍스트가 같이 로드되어야 하기 때문, 페이지가 다 로드되기 이전에 나오는 로드표시까지 함께 작동하게 하기 위함
+  window.addEventListener("load", () => {
+    setLayout();
+    sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+  }); // 이미지와 텍스트가 같이 로드되어야 하기 때문, 페이지가 다 로드되기 이전에 나오는 로드표시까지 함께 작동하게 하기 위함
   window.addEventListener("resize", setLayout);
 })();

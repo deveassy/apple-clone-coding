@@ -81,6 +81,9 @@ body.before-load {
   padding-top: 50vh;
 }
 #scroll-section-0 h1 {
+  position: relative;
+  top: -10vh;
+  z-index: 5;
   font-size: 4rem;
   text-align: center;
 }
@@ -107,8 +110,8 @@ body.before-load {
   font-size: 3.5rem;
 }
 .description {
-    max-width: 1000px;
-    margin: 0 auto;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 0 1rem;
   font-size: 1.2rem;
   color: #888;
@@ -174,6 +177,15 @@ body.before-load {
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem {
     display: block;
+}
+.sticky-elem-canvas {
+  top:0;
+  height: 100%;
+}
+.sticky-elem-canvas canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 @media (min-width: 1024px) {
