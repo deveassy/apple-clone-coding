@@ -124,6 +124,7 @@ body.before-load {
 }
 .desc-message {
   width: 50%;
+  opacity: 0;
   font-weight: bold;
 }
 .pin {
